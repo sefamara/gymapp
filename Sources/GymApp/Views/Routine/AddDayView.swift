@@ -24,14 +24,9 @@ struct AddDayView: View {
                 Section("Ícono") {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: Theme.Spacing.md) {
                         ForEach(symbolOptions, id: \.self) { symbol in
-                            Image(systemName: symbol)
-                                .font(.title2)
-                                .frame(width: 48, height: 48)
-                                .glassEffect(
-                                    symbol == symbolName ? Glass.regular.tint(.accentColor) : Glass.regular,
-                                    in: .circle
-                                )
-                                .onTapGesture { symbolName = symbol }
+                            SymbolOption(symbol: symbol, isSelected: symbol == symbolName) {
+                                symbolName = symbol
+                            }
                         }
                     }
                     .padding(.vertical, Theme.Spacing.sm)
@@ -54,6 +49,20 @@ struct AddDayView: View {
         let day = WorkoutDay(name: name.trimmingCharacters(in: .whitespaces), symbolName: symbolName, order: nextOrder)
         context.insert(day)
         dismiss()
+    }
+}
+
+private struct SymbolOption: View {
+    let symbol: String
+    let isSelected: Bool
+    let onTap: () -> Void
+
+    var body: some View {
+        Image(systemName: symbol)
+            .font(.title2)
+            .frame(width: 48, height: 48)
+            .glassEffect(isSelected ? Glass.regular.tint(.accentColor) : Glass.regular, in: .circle)
+            .onTapGesture(perform: onTap)
     }
 }
 

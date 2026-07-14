@@ -16,6 +16,10 @@ struct ExerciseHistoryChart: View {
             .sorted { $0.date < $1.date }
     }
 
+    private var recentEntries: [SetEntry] {
+        Array((exercise.setEntries ?? []).sorted { $0.date > $1.date }.prefix(30))
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Theme.Spacing.lg) {
@@ -38,16 +42,8 @@ struct ExerciseHistoryChart: View {
                     Text("Historial de series")
                         .font(.headline)
 
-                    ForEach((exercise.setEntries ?? []).sorted { $0.date > $1.date }.prefix(30)) { entry in
-                        HStack {
-                            Text(entry.date, format: .dateTime.day().month().year())
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Spacer()
-                            Text("\(entry.reps) reps × \(entry.weight, format: .number.precision(.fractionLength(1))) kg")
-                                .font(.subheadline)
-                        }
-                        .padding(.vertical, Theme.Spacing.xs)
+                    ForEach(recentEntries) { entry in
+                        SetHistoryRow(entry: entry)
                     }
                 }
                 .glassCardStyle()
@@ -55,5 +51,21 @@ struct ExerciseHistoryChart: View {
             .padding(Theme.Spacing.md)
         }
         .navigationTitle(exercise.name)
+    }
+}
+
+private struct SetHistoryRow: View {
+    let entry: SetEntry
+
+    var body: some View {
+        HStack {
+            Text(entry.date, format: .dateTime.day().month().year())
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Text("\(entry.reps) reps × \(entry.weight, format: .number.precision(.fractionLength(1))) kg")
+                .font(.subheadline)
+        }
+        .padding(.vertical, Theme.Spacing.xs)
     }
 }

@@ -16,19 +16,7 @@ struct StartWorkoutView: View {
                             Button {
                                 start(day: day)
                             } label: {
-                                HStack(spacing: Theme.Spacing.md) {
-                                    Image(systemName: day.symbolName)
-                                        .font(.title2)
-                                        .frame(width: 44, height: 44)
-                                        .glassEffect(Glass.regular.tint(.accentColor.opacity(0.3)), in: .circle)
-                                    VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                                        Text(day.name).font(.headline)
-                                        Text("\(day.orderedSlots.count) ejercicios").font(.subheadline).foregroundStyle(.secondary)
-                                    }
-                                    Spacer()
-                                    Image(systemName: "play.fill").foregroundStyle(.accentColor)
-                                }
-                                .glassCardStyle()
+                                DayStartRow(day: day)
                             }
                             .buttonStyle(.plain)
                         }
@@ -56,6 +44,26 @@ struct StartWorkoutView: View {
         let session = WorkoutSession(day: day)
         context.insert(session)
         activeSession = session
+    }
+}
+
+private struct DayStartRow: View {
+    let day: WorkoutDay
+
+    var body: some View {
+        HStack(spacing: Theme.Spacing.md) {
+            Image(systemName: day.symbolName)
+                .font(.title2)
+                .frame(width: 44, height: 44)
+                .glassEffect(Glass.regular.tint(.accentColor.opacity(0.3)), in: .circle)
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                Text(day.name).font(.headline)
+                Text("\(day.orderedSlots.count) ejercicios").font(.subheadline).foregroundStyle(.secondary)
+            }
+            Spacer()
+            Image(systemName: "play.fill").foregroundStyle(.accentColor)
+        }
+        .glassCardStyle()
     }
 }
 

@@ -35,16 +35,7 @@ struct ExercisePickerView: View {
                             onPick(exercise)
                             dismiss()
                         } label: {
-                            HStack {
-                                VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                                    Text(exercise.name)
-                                        .foregroundStyle(.primary)
-                                    Text(exercise.muscleGroup)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
-                                Spacer()
-                            }
+                            ExerciseRow(exercise: exercise)
                         }
                     }
                 }

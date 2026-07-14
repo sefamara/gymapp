@@ -27,20 +27,7 @@ struct ExerciseLibraryView: View {
 
                 List {
                     ForEach(filtered) { exercise in
-                        HStack {
-                            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                                Text(exercise.name)
-                                Text(exercise.muscleGroup)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                            if !exercise.isCustom {
-                                Text("Predefinido")
-                                    .font(.caption2)
-                                    .foregroundStyle(.tertiary)
-                            }
-                        }
+                        ExerciseRow(exercise: exercise, trailing: exercise.isCustom ? nil : "Predefinido")
                     }
                     .onDelete(perform: delete)
                 }
