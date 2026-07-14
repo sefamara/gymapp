@@ -61,7 +61,7 @@ private struct DayStartRow: View {
                 Text("\(day.orderedSlots.count) ejercicios").font(.subheadline).foregroundStyle(.secondary)
             }
             Spacer()
-            Image(systemName: "play.fill").foregroundStyle(.accentColor)
+            Image(systemName: "play.fill").foregroundStyle(Color.accentColor)
         }
         .glassCardStyle()
     }
