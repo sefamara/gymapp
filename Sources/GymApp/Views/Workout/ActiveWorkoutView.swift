@@ -5,6 +5,7 @@ struct ActiveWorkoutView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Bindable var session: WorkoutSession
+    @State private var restTimer = RestTimerController()
 
     var body: some View {
         NavigationStack {
@@ -13,12 +14,15 @@ struct ActiveWorkoutView: View {
                     LazyVStack(spacing: Theme.Spacing.lg) {
                         ForEach(session.day?.orderedSlots ?? []) { slot in
                             if let exercise = slot.exercise {
-                                ExerciseLogSection(session: session, exercise: exercise, slot: slot)
+                                ExerciseLogSection(session: session, exercise: exercise, slot: slot, restTimer: restTimer)
                             }
                         }
                     }
                     .padding(Theme.Spacing.md)
                 }
+            }
+            .safeAreaInset(edge: .top) {
+                RestTimerBanner(timer: restTimer)
             }
             .navigationTitle(session.day?.name ?? "Entrenamiento")
             .toolbar {
@@ -30,6 +34,7 @@ struct ActiveWorkoutView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Terminar") {
+                        restTimer.cancel()
                         session.isCompleted = true
                         dismiss()
                     }
@@ -45,6 +50,7 @@ private struct ExerciseLogSection: View {
     @Bindable var session: WorkoutSession
     let exercise: Exercise
     let slot: DayExerciseSlot
+    var restTimer: RestTimerController
 
     private var loggedSets: [SetEntry] {
         (session.setEntries ?? [])
@@ -57,7 +63,7 @@ private struct ExerciseLogSection: View {
             HStack {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                     Text(exercise.name).font(.headline)
-                    Text("Objetivo: \(slot.targetSets) x \(slot.repRangeLabel)")
+                    Text("Objetivo: \(slot.targetSets) x \(slot.repRangeLabel) · Descanso \(slot.restLabel)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -85,6 +91,7 @@ private struct ExerciseLogSection: View {
         let newSet = SetEntry(exercise: exercise, setNumber: loggedSets.count + 1, reps: lastReps, weight: lastWeight)
         newSet.session = session
         context.insert(newSet)
+        restTimer.start(duration: TimeInterval(slot.restSeconds))
     }
 }
 

@@ -88,6 +88,15 @@ private struct SlotRow: View {
                 Stepper("\(slot.targetRepsHigh)", value: $slot.targetRepsHigh, in: 1...50)
             }
             .font(.subheadline)
+
+            HStack {
+                Text("Descanso")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Stepper(slot.restLabel, value: $slot.restSeconds, in: 15...600, step: 15)
+                    .font(.subheadline)
+            }
         }
         .glassCardStyle()
     }
