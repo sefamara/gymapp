@@ -7,6 +7,7 @@ import UIKit
 /// Drives the rest-between-sets countdown. Schedules a local notification so
 /// the rest period still alerts the lifter after the phone locks or the app
 /// backgrounds — a plain in-process `Timer` would not fire reliably then.
+@MainActor
 @Observable
 final class RestTimerController {
     private(set) var endDate: Date?
