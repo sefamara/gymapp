@@ -52,10 +52,16 @@ private struct ExerciseLogSection: View {
     let slot: DayExerciseSlot
     var restTimer: RestTimerController
 
+    @State private var isShowingWarmup = false
+
     private var loggedSets: [SetEntry] {
         (session.setEntries ?? [])
             .filter { $0.exercise?.id == exercise.id }
             .sorted { $0.setNumber < $1.setNumber }
+    }
+
+    private var lastWeight: Double {
+        loggedSets.last?.weight ?? (exercise.setEntries ?? []).sorted { $0.date > $1.date }.first?.weight ?? 0
     }
 
     var body: some View {
@@ -75,18 +81,28 @@ private struct ExerciseLogSection: View {
                 SetRowView(set: set)
             }
 
-            Button {
-                addSet()
-            } label: {
-                Label("Agregar serie", systemImage: "plus.circle.fill")
+            HStack(spacing: Theme.Spacing.lg) {
+                Button {
+                    addSet()
+                } label: {
+                    Label("Agregar serie", systemImage: "plus.circle.fill")
+                }
+
+                Button {
+                    isShowingWarmup = true
+                } label: {
+                    Label("Calentamiento", systemImage: "flame")
+                }
             }
             .font(.subheadline)
         }
         .glassCardStyle()
+        .sheet(isPresented: $isShowingWarmup) {
+            WarmupCalculatorSheet(exercise: exercise, suggestedWeight: lastWeight > 0 ? lastWeight : 20)
+        }
     }
 
     private func addSet() {
-        let lastWeight = loggedSets.last?.weight ?? (exercise.setEntries ?? []).sorted { $0.date > $1.date }.first?.weight ?? 0
         let lastReps = loggedSets.last?.reps ?? slot.targetRepsLow
         let newSet = SetEntry(exercise: exercise, setNumber: loggedSets.count + 1, reps: lastReps, weight: lastWeight)
         newSet.session = session

@@ -30,9 +30,31 @@ struct SetRowView: View {
             }
 
             Spacer()
+
+            if set.exercise?.category == .freeWeight {
+                PlateButton(weight: set.weight)
+            }
         }
         .padding(.vertical, Theme.Spacing.xs)
         .padding(.horizontal, Theme.Spacing.sm)
         .glassEffect(Glass.regular, in: .rect(cornerRadius: Theme.Radius.control))
+    }
+}
+
+private struct PlateButton: View {
+    let weight: Double
+    @State private var isShowingBreakdown = false
+
+    var body: some View {
+        Button {
+            isShowingBreakdown = true
+        } label: {
+            Image(systemName: "circle.grid.2x2.fill")
+                .foregroundStyle(.secondary)
+        }
+        .popover(isPresented: $isShowingBreakdown) {
+            PlateBreakdownView(totalWeight: weight)
+                .presentationCompactAdaptation(.popover)
+        }
     }
 }
