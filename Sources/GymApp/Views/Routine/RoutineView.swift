@@ -15,13 +15,13 @@ struct RoutineView: View {
                         ForEach(days) { day in
                             NavigationLink(value: day) {
                                 DayRow(day: day)
+                                    .contextMenu {
+                                        Button("Eliminar día", role: .destructive) {
+                                            delete(day)
+                                        }
+                                    }
                             }
                             .buttonStyle(.plain)
-                            .contextMenu {
-                                Button("Eliminar día", role: .destructive) {
-                                    delete(day)
-                                }
-                            }
                         }
                     }
                     .padding(Theme.Spacing.md)
