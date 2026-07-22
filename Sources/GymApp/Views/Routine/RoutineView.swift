@@ -84,6 +84,7 @@ private struct DayRow: View {
             Image(systemName: "chevron.right")
                 .foregroundStyle(.tertiary)
         }
+        .contentShape(Rectangle())
         .glassCardStyle()
     }
 }

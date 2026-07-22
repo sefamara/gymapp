@@ -63,6 +63,7 @@ private struct DayStartRow: View {
             Spacer()
             Image(systemName: "play.fill").foregroundStyle(Color.accentColor)
         }
+        .contentShape(Rectangle())
         .glassCardStyle()
     }
 }
